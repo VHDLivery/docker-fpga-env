@@ -1,4 +1,4 @@
-# fpga-env
+# docker-fpga-env
 
 Development environments combining independently published FPGA tool images.
 
