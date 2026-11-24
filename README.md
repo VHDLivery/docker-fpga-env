@@ -5,9 +5,9 @@ Development environments combining independently published FPGA tool images.
 ## Open Source environment
 
 The environment currently provides GHDL, VUnit, fpgather and GTKWave through
-`ghcr.io/vhdlivery/ghdl-docker:latest`. Yosys is not included yet.
+`ghcr.io/vhdlivery/docker-ghdl:latest`. Yosys is not included yet.
 The image source, tests and release workflows live in
-[VHDLivery/ghdl-docker](https://github.com/VHDLivery/ghdl-docker).
+[VHDLivery/docker-ghdl](https://github.com/VHDLivery/docker-ghdl).
 No Git submodules or local tool builds are required.
 
 The GHDL image must be published from that repository before the default
@@ -31,7 +31,7 @@ VS Code, or edit the Compose image reference. For example, after publishing
 that release:
 
 ```sh
-export GHDL_IMAGE=ghcr.io/vhdlivery/ghdl-docker:v1.0.0
+export GHDL_IMAGE=ghcr.io/vhdlivery/docker-ghdl:v1.0.0
 code .
 ```
 

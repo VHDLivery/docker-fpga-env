@@ -1,6 +1,6 @@
 services:
   ghdl:
-    image: ${GHDL_IMAGE:-ghcr.io/vhdlivery/ghdl-docker:latest}
+    image: ${GHDL_IMAGE:-ghcr.io/vhdlivery/docker-ghdl:latest}
     volumes:
       - ../..:/workspace
     working_dir: /workspace
