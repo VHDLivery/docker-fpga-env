@@ -1,0 +1,10 @@
+services:
+  ghdl:
+    image: ${GHDL_IMAGE:-ghcr.io/vhdlivery/ghdl-docker:latest}
+    volumes:
+      - ../..:/workspace
+    working_dir: /workspace
+    environment:
+      DISPLAY: ${DISPLAY:-host.docker.internal:0}
+    command: [sleep, infinity]
+    init: true

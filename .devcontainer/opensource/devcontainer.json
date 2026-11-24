@@ -1,0 +1,21 @@
+{
+  "name": "Open Source – GHDL",
+  "remoteUser": "fpga-env",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/home/fpga-env/.venv/bin/python"
+      },
+      "extensions": [
+        "teros-technology.teroshdl",
+        "ms-python.python",
+        "ms-python.debugpy"
+      ]
+    }
+  },
+  "dockerComposeFile": "compose.yaml",
+  "service": "ghdl",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose"
+}

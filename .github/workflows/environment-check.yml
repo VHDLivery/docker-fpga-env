@@ -1,0 +1,18 @@
+name: Validate development environments
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate Open Source environment
+        run: docker compose -f .devcontainer/opensource/compose.yaml config --quiet

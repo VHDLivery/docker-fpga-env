@@ -1,8 +1,0 @@
-syntax_version: 1
-
-language_defaults:
-  ".vhd": "2008"
-
-sources:
-  - src/rtl/hdl/counter.vhd
-  - src/sim/hdl/tb_example.vhd

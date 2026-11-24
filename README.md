@@ -1,66 +1,57 @@
 # fpga-env
 
-Containerized FPGA toolchains for simulation, synthesis, and implementation.
+Development environments combining independently published FPGA tool images.
 
-## Structure
+## Open Source environment
 
-- `containers/ghdl/`: GHDL image with LLVM backend, Python, VUnit and GTKWave.
-- `examples/vhdl/`: VHDL counter example with VUnit and fpgather.
-- `scripts/`: repository helper scripts.
-- `.github/workflows/`: Docker build checks and release publication.
-- `.devcontainer/`: optional development container configuration.
+The environment currently provides GHDL, VUnit, fpgather and GTKWave through
+`ghcr.io/vhdlivery/ghdl-docker:latest`. Yosys is not included yet.
+The image source, tests and release workflows live in
+[VHDLivery/ghdl-docker](https://github.com/VHDLivery/ghdl-docker).
+No Git submodules or local tool builds are required.
 
-Additional tool images can be added under `containers/` independently.
+The GHDL image must be published from that repository before the default
+configuration can be started. For reproducible environments, choose a published
+version tag or digest rather than `latest`.
 
-## Build
+## VS Code
 
-From the repository root:
+Install Docker and the VS Code Dev Containers extension. Open this repository
+and select **Dev Containers: Reopen in Container** from the Command Palette.
+Select **Open Source – GHDL** if prompted.
 
-```sh
-./scripts/build-ghdl.sh
-# Optional: choose an image name and tag
-./scripts/build-ghdl.sh vhdlivery/fpga-env:1.0
-```
+The configuration in `.devcontainer/opensource/devcontainer.json` connects to
+the Compose service `ghdl`. The repository is mounted at `/workspace`.
+TerosHDL, Python and Python Debugger are installed as editor extensions.
+The container user is `fpga-env`, and Python uses its virtual environment.
+Closing the development container stops the Compose environment.
 
-## Run the example
-
-```sh
-docker run --rm -it -v "$PWD:/workspace" \
-  -w /workspace/examples/vhdl fpga-env/ghdl:local bash
-```
-
-Then follow [the example instructions](examples/vhdl/README.md).
-The project sources are mounted at runtime, not included in the image.
-
-## Checks
-
-Linting does not require a dedicated image yet. GHDL-based checks can use the
-GHDL image; other checks can run directly in their respective environments.
-
-## GitHub Actions and releases
-
-Changes to the GHDL Dockerfile, VHDL example, build context exclusions or workflows
-trigger native AMD64 and ARM64 build checks on pull requests and pushes to
-`main`. Each check verifies GHDL, VUnit and fpgather and runs all three counter
-simulation tests inside the image.
-The build workflow can also be started manually. Checks never publish images.
-
-Publishing a GitHub release first runs both build and simulation checks, then
-builds its tagged commit and uploads a multi-platform
-image for Linux AMD64 and ARM64 to `ghcr.io/vhdlivery/fpga-env/ghdl`.
-The GitHub release tag becomes the image tag, for example:
+To choose a version, set `GHDL_IMAGE` in your host environment before starting
+VS Code, or edit the Compose image reference. For example, after publishing
+that release:
 
 ```sh
-docker pull ghcr.io/vhdlivery/fpga-env/ghdl:v1.0.0
+export GHDL_IMAGE=ghcr.io/vhdlivery/ghdl-docker:v1.0.0
+code .
 ```
 
-Stable releases also update `latest`; prereleases publish only their release
-tag. Creating a draft release or pushing a Git tag alone does not publish an
-image. Release builds bypass the build cache to resolve the unpinned Python
-packages again. Consequently, rebuilding a release can produce different
-package versions.
+## Without VS Code
 
-Authentication uses the workflow's automatic `GITHUB_TOKEN`; no personal token
-or Docker Hub credentials are needed. Organization settings must allow package
-creation. If anonymous pulls are desired, verify that the GHCR package has
-public visibility after its first publication.
+```sh
+docker compose -f .devcontainer/opensource/compose.yaml run --rm ghdl bash
+```
+
+The current repository is the mounted workspace. The container supplies tools;
+it does not include a copy of your project. Simulation outputs should use
+`build/ghdl/` within the project. For examples and container tests, see the
+GHDL image repository.
+
+## Additional tools
+
+Add an independent service to `.devcontainer/opensource/compose.yaml` for a
+future tool such as Yosys. Mount the same workspace at `/workspace` and keep
+its generated output separate, for example `build/yosys/`. Tool processes run
+independently; no source repository checkout is required for their images.
+
+GitHub Actions validates the environment configuration here. Tool image builds,
+simulation tests and image releases belong to the respective tool repository.
